@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Seamless texture check</title>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100vh;
+        background-size: 150px;
+        font-family: "Georgia", "Calibri";
+        background-image: url("default.jpg");
+        background-color: #f0f0f0;
+        overflow: hidden; /* Prevent scrollbars */
+      }
+
+      .entry {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #container {
+        width: 80%;
+        max-width: 600px;
+        background-color: #ffffff;
+        margin: auto;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        z-index: 1000; /* Ensure modal is on top of other elements */
+      }
+
+      #container:hover {
+        transform: translateX(-50%) scale(1.02); /* Slightly enlarge on hover */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+      }
+
+      .content {
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        color: #333;
+        text-transform: uppercase;
+      }
+
+      input[type="range"] {
+        -webkit-appearance: none; /* Remove default styling */
+        width: 100%;
+        height: 8px;
+        background: #ddd;
+        border-radius: 5px;
+        outline: none;
+        cursor: pointer;
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 24px;
+        height: 24px;
+        background: #007bff;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      input[type="range"]::-moz-range-thumb {
+        width: 24px;
+        height: 24px;
+        background: #007bff;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      small {
+        display: block;
+        margin-top: 20px;
+        color: #555;
+      }
+
+      a,
+      a:visited,
+      a:active {
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: #0056b3;
+      }
+
+      /* For modal backdrop */
+      .backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999; /* Ensure backdrop is behind the modal */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="backdrop" id="backdrop">
+      <div id="container">
+        <div class="content">
+          <h1>Seamless Texture Checker</h1>
+          Tile width
+          <input
+            id="setWidthSlider"
+            type="range"
+            name="points"
+            min="1"
+            max="20"
+            value="3"
+          />
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function handleFileSelect(file) {
+        var image = new Image();
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          image.src = e.target.result;
+          image.onload = function () {
+            document.body.style.backgroundImage =
+              "url('" + e.target.result + "')";
+          };
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function handlePaste(evt) {
+        var items = evt.clipboardData.items;
+        for (var i = 0; i < items.length; i++) {
+          if (items[i].type.startsWith("image/")) {
+            var file = items[i].getAsFile();
+            handleFileSelect(file);
+          }
+        }
+      }
+
+      function handleDragOver(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+        evt.dataTransfer.dropEffect = "copy"; // Explicitly show this is a copy.
+      }
+
+      function handleDragLeave(evt) {
+        // No changes needed here
+      }
+
+      document.body.addEventListener("dragover", handleDragOver, false);
+      document.body.addEventListener("dragleave", handleDragLeave, false);
+      document.body.addEventListener("drop", handleFileSelect, false);
+      document.addEventListener("paste", handlePaste, false);
+
+      var p = document.getElementById("setWidthSlider");
+      p.addEventListener(
+        "input",
+        function () {
+          var widthpx = p.value * 50;
+          document.body.style.backgroundSize = widthpx.toString() + "px";
+          console.log("'" + widthpx.toString() + "px'");
+        },
+        false
+      );
+    </script>
+  </body>
+</html>
