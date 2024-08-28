@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Seamless texture check</title>
+    <title>Seamless Texture Checker</title>
 
     <style>
       html,
@@ -25,24 +25,34 @@
         align-items: center;
       }
 
+      .backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        /* background: rgba(0, 0, 0, 0.5); */
+        z-index: 999; /* Ensure backdrop is behind the modal */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
       #container {
         width: 80%;
         max-width: 600px;
         background-color: #ffffff;
-        margin: auto;
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        position: fixed;
-        top: 10%;
-        left: 50%;
-        transform: translateX(-50%);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: absolute;
+        top: 5%;
         z-index: 1000; /* Ensure modal is on top of other elements */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
 
       #container:hover {
-        transform: translateX(-50%) scale(1.02); /* Slightly enlarge on hover */
+        transform: scale(1.02); /* Slightly enlarge on hover */
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
       }
 
@@ -101,41 +111,47 @@
         color: #0056b3;
       }
 
-      /* For modal backdrop */
-      .backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
+      .drop-zone {
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 999; /* Ensure backdrop is behind the modal */
+        /* border: 2px dashed #007bff; */
+        /* border-radius: 10px; */
+        background-color: rgba(0, 0, 0, 0.1);
         display: flex;
         justify-content: center;
         align-items: center;
+        /* color: #007bff; */
+        font-size: 1.2em;
+        text-align: center;
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1500; /* Ensure drop zone is above content */
       }
     </style>
   </head>
   <body>
-    <div class="backdrop" id="backdrop">
-      <div id="container">
-        <div class="content">
-          <h1>Seamless Texture Checker</h1>
-          Tile width
-          <input
-            id="setWidthSlider"
-            type="range"
-            name="points"
-            min="1"
-            max="20"
-            value="3"
-          />
+    <div class="drop-zone" id="dropZone">
+      <div class="backdrop" id="backdrop">
+        <div id="container">
+          <div class="content">
+            <h1>Seamless Texture Checker</h1>
+            <input
+              id="setWidthSlider"
+              type="range"
+              name="points"
+              min="1"
+              max="20"
+              value="3"
+            />
+          </div>
         </div>
       </div>
     </div>
 
     <script>
-      function handleFileSelect(file) {
+      function handleFileSelect(files) {
         var image = new Image();
         var reader = new FileReader();
 
@@ -146,7 +162,7 @@
               "url('" + e.target.result + "')";
           };
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(files[0]);
       }
 
       function handlePaste(evt) {
@@ -154,7 +170,7 @@
         for (var i = 0; i < items.length; i++) {
           if (items[i].type.startsWith("image/")) {
             var file = items[i].getAsFile();
-            handleFileSelect(file);
+            handleFileSelect([file]);
           }
         }
       }
@@ -163,15 +179,35 @@
         evt.stopPropagation();
         evt.preventDefault();
         evt.dataTransfer.dropEffect = "copy"; // Explicitly show this is a copy.
+        document.getElementById("dropZone").style.backgroundColor =
+          "rgba(0, 0, 0, 0.2)";
+        document.getElementById("dropZone").style.color = "#333";
       }
 
       function handleDragLeave(evt) {
-        // No changes needed here
+        document.getElementById("dropZone").style.backgroundColor =
+          "rgba(0, 0, 0, 0.1)";
+        document.getElementById("dropZone").style.color = "#007bff";
       }
 
-      document.body.addEventListener("dragover", handleDragOver, false);
-      document.body.addEventListener("dragleave", handleDragLeave, false);
-      document.body.addEventListener("drop", handleFileSelect, false);
+      function handleDrop(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+        document.getElementById("dropZone").style.backgroundColor =
+          "rgba(0, 0, 0, 0.1)";
+        document.getElementById("dropZone").style.color = "#007bff";
+        handleFileSelect(evt.dataTransfer.files);
+      }
+
+      document
+        .getElementById("dropZone")
+        .addEventListener("dragover", handleDragOver, false);
+      document
+        .getElementById("dropZone")
+        .addEventListener("dragleave", handleDragLeave, false);
+      document
+        .getElementById("dropZone")
+        .addEventListener("drop", handleDrop, false);
       document.addEventListener("paste", handlePaste, false);
 
       var p = document.getElementById("setWidthSlider");
