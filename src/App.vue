@@ -9,7 +9,9 @@
         <div class="container" :class="{ 'container-hover': isDragging }">
           <div class="content">
             <div class="header-row">
-              <h1>Seamless Texture Checker by Claudio</h1>
+              <transition name="flip" appear>
+                <h1 class="animated-title">Seamless Texture Checker by Claudio</h1>
+              </transition>
               <div class="file-input-wrapper">
                 <input 
                   type="file" 
@@ -165,6 +167,9 @@ html, body {
   z-index: 1000;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  animation: float3d-container 8s ease-in-out infinite;
+  transform-style: preserve-3d;
+  perspective: 1000px;
 }
 
 .container-hover {
@@ -212,6 +217,8 @@ h1 {
   transition: all 0.3s ease;
   font-size: 0.8em;
   white-space: nowrap;
+  animation: pulse3d 2s infinite;
+  transform-style: preserve-3d;
 }
 
 .file-input-label:hover {
@@ -267,5 +274,113 @@ h1 {
   margin-top: 8px;
   font-size: 1em;
   color: #333;
+}
+
+/* Animation styles */
+.flip-enter-active {
+  animation: flip-in 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.flip-leave-active {
+  animation: flip-out 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes flip-in {
+  0% {
+    transform: perspective(400px) rotateX(90deg) scale(0.3);
+    opacity: 0;
+  }
+  100% {
+    transform: perspective(400px) rotateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes flip-out {
+  0% {
+    transform: perspective(400px) rotateX(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: perspective(400px) rotateX(-90deg) scale(0.3);
+    opacity: 0;
+  }
+}
+
+.animated-title {
+  animation: rainbow 5s linear infinite, float3d 6s ease-in-out infinite;
+  background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+@keyframes rainbow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes float3d {
+  0% {
+    transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0);
+  }
+  25% {
+    transform: perspective(1000px) rotateX(5deg) rotateY(5deg) translateZ(20px);
+  }
+  50% {
+    transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0);
+  }
+  75% {
+    transform: perspective(1000px) rotateX(-5deg) rotateY(-5deg) translateZ(20px);
+  }
+  100% {
+    transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0);
+  }
+}
+
+.container {
+  animation: float3d-container 8s ease-in-out infinite;
+}
+
+@keyframes float3d-container {
+  0% {
+    transform: perspective(1000px) translateX(-50%) translateY(0) rotateX(0deg) rotateY(0deg);
+  }
+  25% {
+    transform: perspective(1000px) translateX(-50%) translateY(-10px) rotateX(2deg) rotateY(2deg);
+  }
+  50% {
+    transform: perspective(1000px) translateX(-50%) translateY(0) rotateX(0deg) rotateY(0deg);
+  }
+  75% {
+    transform: perspective(1000px) translateX(-50%) translateY(-10px) rotateX(-2deg) rotateY(-2deg);
+  }
+  100% {
+    transform: perspective(1000px) translateX(-50%) translateY(0) rotateX(0deg) rotateY(0deg);
+  }
+}
+
+.file-input-label {
+  animation: pulse3d 2s infinite;
+}
+
+@keyframes pulse3d {
+  0% {
+    transform: perspective(1000px) scale(1) translateZ(0);
+  }
+  50% {
+    transform: perspective(1000px) scale(1.1) translateZ(10px);
+  }
+  100% {
+    transform: perspective(1000px) scale(1) translateZ(0);
+  }
 }
 </style> 
