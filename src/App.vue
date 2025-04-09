@@ -9,7 +9,7 @@
         <div class="container" :class="{ 'container-hover': isDragging }">
           <div class="content">
             <div class="header-row">
-              <transition name="flip" appear>
+              <transition name="bounce" appear>
                 <h1 class="animated-title">Seamless Texture Checker by Claudio</h1>
               </transition>
               <div class="file-input-wrapper">
@@ -96,6 +96,13 @@ export default {
     updateTextureSize() {
       const widthpx = this.textureSize * 50
       document.body.style.backgroundSize = `${widthpx}px`
+      
+      // Update slider track fill
+      const slider = document.getElementById('textureSize')
+      if (slider) {
+        const value = ((this.textureSize - 1) / (20 - 1)) * 100
+        slider.style.setProperty('--background-size', `${value}%`)
+      }
     }
   },
   mounted() {
@@ -167,9 +174,18 @@ html, body {
   z-index: 1000;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  animation: float3d-container 8s ease-in-out infinite;
-  transform-style: preserve-3d;
-  perspective: 1000px;
+}
+
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 15px;
+  animation: float 6s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .container-hover {
@@ -217,8 +233,7 @@ h1 {
   transition: all 0.3s ease;
   font-size: 0.8em;
   white-space: nowrap;
-  animation: pulse3d 2s infinite;
-  transform-style: preserve-3d;
+  animation: pulse 2s infinite;
 }
 
 .file-input-label:hover {
@@ -240,6 +255,33 @@ h1 {
   outline: none;
   cursor: pointer;
   margin: 8px 0;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: visible;
+}
+
+.slider::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: var(--background-size, 0%);
+  background: linear-gradient(90deg, 
+    #ff0000, #ff7f00, #ffff00, #00ff00, 
+    #0000ff, #4b0082, #8b00ff, #ff0000);
+  background-size: 200% 100%;
+  animation: rainbow-track 3s linear infinite;
+  border-radius: 5px;
+  z-index: 1;
+}
+
+.slider::-webkit-slider-runnable-track {
+  background: transparent;
+}
+
+.slider::-moz-range-track {
+  background: transparent;
 }
 
 .slider::-webkit-slider-thumb {
@@ -249,11 +291,15 @@ h1 {
   background: #007bff;
   border-radius: 50%;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 2;
 }
 
 .slider::-webkit-slider-thumb:hover {
   transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
 }
 
 .slider::-moz-range-thumb {
@@ -262,11 +308,15 @@ h1 {
   background: #007bff;
   border-radius: 50%;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 2;
 }
 
 .slider::-moz-range-thumb:hover {
   transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
 }
 
 .size-value {
@@ -277,46 +327,37 @@ h1 {
 }
 
 /* Animation styles */
-.flip-enter-active {
-  animation: flip-in 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+.bounce-enter-active {
+  animation: bounce-in 0.8s;
 }
 
-.flip-leave-active {
-  animation: flip-out 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+.bounce-leave-active {
+  animation: bounce-in 0.8s reverse;
 }
 
-@keyframes flip-in {
+@keyframes bounce-in {
   0% {
-    transform: perspective(400px) rotateX(90deg) scale(0.3);
+    transform: scale(0);
     opacity: 0;
   }
-  100% {
-    transform: perspective(400px) rotateX(0) scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes flip-out {
-  0% {
-    transform: perspective(400px) rotateX(0) scale(1);
-    opacity: 1;
+  50% {
+    transform: scale(1.2);
   }
   100% {
-    transform: perspective(400px) rotateX(-90deg) scale(0.3);
-    opacity: 0;
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
 .animated-title {
-  animation: rainbow 5s linear infinite, float3d 6s ease-in-out infinite;
+  animation: rainbow 5s linear infinite, float-title 3s ease-in-out infinite;
   background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
   background-size: 400% 400%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   text-shadow: none;
-  transform-style: preserve-3d;
-  perspective: 1000px;
+  display: inline-block;
 }
 
 @keyframes rainbow {
@@ -328,59 +369,48 @@ h1 {
   }
 }
 
-@keyframes float3d {
+@keyframes float {
   0% {
-    transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0);
-  }
-  25% {
-    transform: perspective(1000px) rotateX(5deg) rotateY(5deg) translateZ(20px);
+    transform: translateY(0px);
   }
   50% {
-    transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0);
-  }
-  75% {
-    transform: perspective(1000px) rotateX(-5deg) rotateY(-5deg) translateZ(20px);
+    transform: translateY(-10px);
   }
   100% {
-    transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0);
+    transform: translateY(0px);
   }
 }
 
-.container {
-  animation: float3d-container 8s ease-in-out infinite;
-}
-
-@keyframes float3d-container {
+@keyframes pulse {
   0% {
-    transform: perspective(1000px) translateX(-50%) translateY(0) rotateX(0deg) rotateY(0deg);
-  }
-  25% {
-    transform: perspective(1000px) translateX(-50%) translateY(-10px) rotateX(2deg) rotateY(2deg);
+    transform: scale(1);
   }
   50% {
-    transform: perspective(1000px) translateX(-50%) translateY(0) rotateX(0deg) rotateY(0deg);
-  }
-  75% {
-    transform: perspective(1000px) translateX(-50%) translateY(-10px) rotateX(-2deg) rotateY(-2deg);
+    transform: scale(1.05);
   }
   100% {
-    transform: perspective(1000px) translateX(-50%) translateY(0) rotateX(0deg) rotateY(0deg);
+    transform: scale(1);
   }
 }
 
-.file-input-label {
-  animation: pulse3d 2s infinite;
-}
-
-@keyframes pulse3d {
+@keyframes float-title {
   0% {
-    transform: perspective(1000px) scale(1) translateZ(0);
+    transform: translateY(0);
   }
   50% {
-    transform: perspective(1000px) scale(1.1) translateZ(10px);
+    transform: translateY(-5px);
   }
   100% {
-    transform: perspective(1000px) scale(1) translateZ(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes rainbow-track {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
   }
 }
 </style> 
