@@ -1,9 +1,7 @@
 {
   "name": "seamlesschecker",
   "compatibility_date": "2024-04-09",
-  "build": {
-    "command": "npm run build",
-    "cwd": ".",
-    "output": "dist"
+  "assets": {
+    "directory": "./dist"
   }
 } 
