@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-08T07:13:25Z",
+  "title": "Design System: Seamless Texture Checker",
+  "extensions": {
+    "colorMeta": {
+      "primary": { "role": "primary", "displayName": "Workbench Blue", "canonical": "oklch(55% 0.21 260)" },
+      "primary-deep": { "role": "primary-hover", "displayName": "Workbench Blue, Deep", "canonical": "oklch(42% 0.19 260)" },
+      "ink": { "role": "text", "displayName": "Ink", "canonical": "oklch(29% 0 0)" },
+      "white-panel": { "role": "surface", "displayName": "Panel White", "canonical": "oklch(100% 0 0 / 95%)" },
+      "page-bg": { "role": "background", "displayName": "Page Gray", "canonical": "oklch(95% 0 0)" },
+      "track-bg": { "role": "neutral", "displayName": "Track Gray", "canonical": "oklch(88% 0 0)" },
+      "inspection-guide": { "role": "utility", "displayName": "Inspection Guide Red", "canonical": "oklch(63% 0.26 29 / 35%)" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Title", "purpose": "The single animated title, Comic Sans, rainbow-filled. Used nowhere else." },
+      "body": { "displayName": "Base", "purpose": "Quiet document base font-family; the interface carries almost no body copy." }
+    },
+    "shadows": [
+      { "name": "resting-lift", "value": "0 4px 15px rgba(0,0,0,0.1)", "purpose": "The floating panel's always-on resting shadow." },
+      { "name": "drag-lift", "value": "0 6px 20px rgba(0,0,0,0.15)", "purpose": "Panel shadow while a file is being dragged over the page." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "ease", "purpose": "Default transition easing across panel, button, and slider states." },
+      { "name": "float-cycle", "value": "6s ease-in-out infinite", "purpose": "Panel's continuous gentle float." },
+      { "name": "rainbow-cycle", "value": "5s linear infinite", "purpose": "Title's hue-rotating gradient position." }
+    ],
+    "breakpoints": []
+  },
+  "components": [
+    {
+      "name": "Control Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "The floating control panel: title row + file input, size slider below. Always elevated, gains lift on drag-over.",
+      "html": "<div class=\"ds-panel\"><div class=\"ds-panel-header\"><h1 class=\"ds-title\">Seamless Texture Checker by Claudio</h1><label class=\"ds-file-btn\">📁</label></div><input type=\"range\" class=\"ds-slider\" /></div>",
+      "css": ".ds-panel { width: 400px; background: rgba(255,255,255,0.95); padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s ease; } .ds-panel-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 15px; } .ds-title { font-size: 1.1em; margin: 0; font-family: 'Comic Sans MS', cursive; background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff); background-size: 400% 400%; -webkit-background-clip: text; background-clip: text; color: transparent; } .ds-file-btn { display: inline-block; padding: 6px 12px; background: #007bff; color: #fff; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; } .ds-file-btn:hover { background: #0056b3; transform: translateY(-2px); } .ds-slider { width: 100%; height: 8px; background: #ddd; border-radius: 5px; }"
+    },
+    {
+      "name": "File Picker Button",
+      "kind": "button",
+      "refersTo": "button-file",
+      "description": "The one primary action: opens the file picker to choose a texture image.",
+      "html": "<label class=\"ds-btn-file\">📁</label>",
+      "css": ".ds-btn-file { display: inline-block; padding: 6px 12px; background: #007bff; color: #fff; border-radius: 15px; cursor: pointer; font-size: 0.8em; transition: all 0.3s ease; animation: ds-pulse 2s infinite; } .ds-btn-file:hover { background: #0056b3; transform: translateY(-2px); } @keyframes ds-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }"
+    },
+    {
+      "name": "Size Slider",
+      "kind": "input",
+      "refersTo": "slider-track",
+      "description": "Controls the tile size of the texture background, the core interaction for spotting seams.",
+      "html": "<input type=\"range\" class=\"ds-slider\" min=\"1\" max=\"20\" step=\"0.1\" value=\"3\" />",
+      "css": ".ds-slider { -webkit-appearance: none; width: 100%; height: 8px; background: #ddd; border-radius: 5px; outline: none; cursor: pointer; } .ds-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: #007bff; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.2s; } .ds-slider::-webkit-slider-thumb:hover { transform: scale(1.1); box-shadow: 0 4px 8px rgba(0,123,255,0.4); }"
+    },
+    {
+      "name": "Offset / Grid Toggle",
+      "kind": "button",
+      "refersTo": "toggle-btn",
+      "description": "Two seam-checking aids: Offset shifts the tiled pattern by half a tile so edge-seams land at center; Grid overlays lines at every tile boundary. Both are real <button> elements with aria-pressed, unlike the icon-only file picker.",
+      "html": "<div style=\"display:flex;gap:10px\"><button class=\"ds-toggle-btn\" aria-pressed=\"false\">⇄ Offset</button><button class=\"ds-toggle-btn ds-toggle-btn-active\" aria-pressed=\"true\">▦ Grid</button></div>",
+      "css": ".ds-toggle-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 6px 14px; background: #fff; color: #333; border: 1px solid #ddd; border-radius: 15px; cursor: pointer; font-size: 0.85em; transition: all 0.2s ease; } .ds-toggle-btn:hover { border-color: #007bff; } .ds-toggle-btn-active { background: #007bff; color: #fff; border-color: #007bff; }"
+    },
+    {
+      "name": "Grid Overlay",
+      "kind": "custom",
+      "refersTo": "N/A",
+      "description": "Full-bleed, pointer-events:none overlay drawing thin inspection-guide-red lines at every tile boundary, sized and offset to match the current tile size and offset state.",
+      "html": "<div class=\"ds-grid-overlay\"></div>",
+      "css": ".ds-grid-overlay { position: fixed; inset: 0; pointer-events: none; background-image: linear-gradient(to right, rgba(255,0,0,0.35) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,0,0,0.35) 1px, transparent 1px); background-size: 150px 150px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Rainbow Workbench",
+    "overview": "A small, cheerful toolbench floats over the real work surface, the tiled texture itself. Everything the user actually judges happens underneath, at full bleed, with nothing constraining or framing it. The workbench on top gets to be playful, colorful, a little toy-like, because it never competes with the image for attention.",
+    "keyCharacteristics": [
+      "One floating panel, pinned near the top of an otherwise fully-bled canvas",
+      "A rainbow gradient is the system's one recurring motif, used exactly twice",
+      "Playful, slightly bouncy motion throughout, always with a static reduced-motion fallback",
+      "Comic Sans as a deliberate, singular personality signal on the one title",
+      "The panel is elevated at rest, not flat-by-default"
+    ],
+    "rules": [
+      { "name": "The One Motif Rule", "body": "The rainbow gradient appears in exactly two places: the animated title text and the slider's fill track. It never becomes a general accent, border, or background elsewhere.", "section": "colors" },
+      { "name": "The Single Signature Rule", "body": "Comic Sans is used in exactly one place, the title. Every other piece of UI carries no typeface personality of its own.", "section": "typography" },
+      { "name": "The Always-Floating Rule", "body": "The panel never sits flat. It has a resting shadow and gains more of it on interaction, reinforcing the physical-object metaphor.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep the rainbow gradient to exactly the title and the slider fill",
+      "Do keep the control panel visually elevated at rest",
+      "Do keep Comic Sans confined to the title only",
+      "Do provide a prefers-reduced-motion fallback for every animation",
+      "Do let the tiled texture stay completely full-bleed and undecorated"
+    ],
+    "donts": [
+      "Don't turn this into a generic SaaS utility page",
+      "Don't make it sterile or corporate-gray",
+      "Don't add friction between having an image and seeing it tiled",
+      "Don't spend the rainbow motif anywhere else in the UI"
+    ]
+  }
+}

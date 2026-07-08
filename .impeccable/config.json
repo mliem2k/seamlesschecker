@@ -1,0 +1,52 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [
+      "src/App.vue"
+    ],
+    "ignoreValues": [
+      {
+        "rule": "bounce-easing",
+        "value": "bounce-in",
+        "reason": "User confirmed playful bounce/float personality is intentional for this hobby tool",
+        "createdAt": "2026-07-08T07:12:29.631Z"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#ff7f00",
+        "reason": "Part of the confirmed rainbow motif (One Motif Rule), documented in DESIGN.md prose rather than itemized as frontmatter tokens per document.md guidance against fabricating gradient-stop entries",
+        "createdAt": "2026-07-08T07:12:29.672Z"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#ffff00",
+        "reason": "Part of the confirmed rainbow motif (One Motif Rule), documented in DESIGN.md prose rather than itemized as frontmatter tokens per document.md guidance against fabricating gradient-stop entries",
+        "createdAt": "2026-07-08T07:12:29.707Z"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#00ff00",
+        "reason": "Part of the confirmed rainbow motif (One Motif Rule), documented in DESIGN.md prose rather than itemized as frontmatter tokens per document.md guidance against fabricating gradient-stop entries",
+        "createdAt": "2026-07-08T07:12:29.745Z"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#0000ff",
+        "reason": "Part of the confirmed rainbow motif (One Motif Rule), documented in DESIGN.md prose rather than itemized as frontmatter tokens per document.md guidance against fabricating gradient-stop entries",
+        "createdAt": "2026-07-08T07:12:29.780Z"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#4b0082",
+        "reason": "Part of the confirmed rainbow motif (One Motif Rule), documented in DESIGN.md prose rather than itemized as frontmatter tokens per document.md guidance against fabricating gradient-stop entries",
+        "createdAt": "2026-07-08T07:12:29.815Z"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#8b00ff",
+        "reason": "Part of the confirmed rainbow motif (One Motif Rule), documented in DESIGN.md prose rather than itemized as frontmatter tokens per document.md guidance against fabricating gradient-stop entries",
+        "createdAt": "2026-07-08T07:12:29.850Z"
+      }
+    ]
+  }
+}
